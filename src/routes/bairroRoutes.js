@@ -1,6 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bairroController = require('../controllers/bairroController');
+const apiKeyMiddleware = require('../config/apiKey'); 
+
+
+router.use(apiKeyMiddleware);
 
 router.get('/', bairroController.getAllBairros);
 router.get('/:id', bairroController.getBairros);
