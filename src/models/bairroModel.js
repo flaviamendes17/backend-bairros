@@ -12,7 +12,8 @@ const getBairroById = async (id) => {
 
 const createBairro = async (bairro) => {
     const result = await pool.query(
-        "INSERT INTO bairros (nome, cidade, estado) VALUES ($1, $2) RETURNING *", [bairro.nome, bairro.cidade, bairro.estado]
+        "INSERT INTO bairros (nome, cidade, estado) VALUES ($1, $2, $3) RETURNING *",
+        [bairro.nome, bairro.cidade, bairro.estado]
     );
     return result.rows[0];
 };

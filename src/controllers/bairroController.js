@@ -1,9 +1,9 @@
-const bairroModel = require('../models/bairroModel ');
+const bairroModel = require("../models/bairroModel");
 
 const getAllBairros = async (req, res) => {
     try {
         const bairros = await bairroModel.getBairros();
-        res.status(bairros);
+        res.status(200).json(bairros); 
     } catch (error) {
         res.status(500).json({ message: "Erro ao buscar os bairros" });
     }
@@ -11,8 +11,8 @@ const getAllBairros = async (req, res) => {
 
 const getBairros = async (req, res) => {
     try {
-        const bairros = await bairroModel.getBairros(req.params.id);
-        if (!bairro){
+        const bairro = await bairroModel.getBairroById(req.params.id); 
+        if (!bairro) {
             return res.status(404).json({ message: "Bairro não encontrado" });
         }
         res.status(200).json(bairro);
@@ -23,13 +23,22 @@ const getBairros = async (req, res) => {
 
 const createBairro = async (req, res) => {
     try {
-        const { nome, cidade, estado } = req.body;
+        const { nome, cidade, estado } = req.body; 
         const newBairro = await bairroModel.createBairro({ nome, cidade, estado });
         res.status(201).json(newBairro);
     } catch (error) {
         res.status(500).json({ message: "Erro ao criar o bairro" });
     }
 };
+
+const deleteBairro = async (req, res) => {
+    try {
+        const message = await bairroModel.deleteBairro(req.params.id);
+        res.json({ message });
+    } catch (error) {
+        res.status(500).json({ message: "Erro ao deletar o bairro" });
+    }
+}
 
 const updateBairro = async (req, res) => {
     try {
@@ -43,4 +52,4 @@ const updateBairro = async (req, res) => {
     }
 };
 
-module.exports = { getAllBairros, getBairros, createBairro, updateBairro };
+module.exports = { getAllBairros, getBairros, createBairro, deleteBairro, updateBairro };

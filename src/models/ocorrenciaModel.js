@@ -1,33 +1,27 @@
 const pool = require('../config/database');
 
-const getOcorrencias = async () => {
-    if (!nomeBairro) {
+const getOcorrencias = async (nomeOcorrencia) => {
+    if (nomeOcorrencia) {
         const result = await pool.query(
-            `SELECT ocorrencias.*, bairro_id AS descricao
-            FROM ocorrencias`
+            "SELECT * FROM ocorrencias WHERE descricao ILIKE $1",
+            [`%${nomeOcorrencia}%`]
         );
         return result.rows;
-    }else {
-        const result = await pool.query(
-            `SELECT ocorrencias.*, bairro_id AS descricao
-            FROM ocorrencias WHERE bairro_id = $1`, [`%${nomeBairro}%`]
-        );
+    } else {
+        const result = await pool.query("SELECT * FROM ocorrencias");
         return result.rows;
     }
 };
 
 const getOcorrenciaById = async (id) => {
-    const result = await pool.query(
-        `SELECT ocorrencias.*, bairro_id AS descricao
-        FROM ocorrencias WHERE id = $1`, [id]
-    );
+    const result = await pool.query("SELECT * FROM ocorrencias WHERE id = $1", [id]);
     return result.rows[0];
 };
 
 const createOcorrencia = async (ocorrencia) => {
     const result = await pool.query(
-        `INSERT INTO ocorrencias (descricao, bairro_id, data_ocorrencia) 
-        VALUES ($1, $2, $3) RETURNING *`, [ocorrencia.descricao, ocorrencia.bairro_id, ]
+        "INSERT INTO ocorrencias (bairro_id, descricao) VALUES ($1, $2) RETURNING *",
+        [ocorrencia.bairro_id, ocorrencia.descricao]
     );
     return result.rows[0];
 };

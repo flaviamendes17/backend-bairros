@@ -4,6 +4,7 @@ const getAllOcorrencias = async (req, res) => {
     try {
         const { nomeOcorrencia} = req.query;
         const ocorrencias = await ocorrenciaModel.getOcorrencias(nomeOcorrencia);
+        res.status(200).json(ocorrencias); 
     } catch (error) {
         res.status(500).json({ message: "Erro ao buscar as ocorrências" });
     }
@@ -11,19 +12,20 @@ const getAllOcorrencias = async (req, res) => {
 
 const getOcorrencia = async (req, res) => {
     try {
-        const ocorrencias = await ocorrenciaModel.getOcorrencias(req.params.id);
-        if (!ocorrencias) {
+        const ocorrencia = await ocorrenciaModel.getOcorrenciaById(req.params.id); 
+        if (!ocorrencia) {
             return res.status(404).json({ message: "Ocorrência não encontrada" });
         }
-        res.json(ocorrencias);
+        res.json(ocorrencia);
     } catch (error) {
+        console.error("Erro ao buscar a ocorrência:", error);
         res.status(500).json({ message: "Erro ao buscar a ocorrência" });
     }
 };
 
 const createOcorrencia = async (req, res) => {
     try {
-        const { bairro_id, descricao} = req.body;
+        const { bairro_id, descricao } = req.body; 
         const newOcorrencia = await ocorrenciaModel.createOcorrencia({ bairro_id, descricao });
         res.status(201).json(newOcorrencia);
     } catch (error) {
