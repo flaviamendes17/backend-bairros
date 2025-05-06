@@ -1,5 +1,5 @@
 const PDFDocument = require('pdfkit');
-const bairroModel = require('../models/bairroModel'); // Certifique-se de que o caminho está correto
+const bairroModel = require('../models/bairroModel'); 
 
 const exportBairrosPdf = async (req, res) => {
     try {
