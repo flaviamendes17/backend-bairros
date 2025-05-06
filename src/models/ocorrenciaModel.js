@@ -35,11 +35,27 @@ const deleteOcorrencia = async (id) => {
         return { message: "Ocorrencia deletada com sucesso." };
 };
 
-const updateOcorrencia = async (bairro_id, descricao) => {
-    const result = await pool.query(
-        `UPDATE ocorrencias SET descricao = $1, bairro_id = $2 WHERE id = $3 RETURNING *`, [descricao, bairro_id]
-    );
-    return result.rows[0];
+const updateOcorrencia = async (id, ocorrencia) => {
+    try {
+        console.log("Tentando atualizar a ocorrência com ID:", id);
+        console.log("Dados recebidos para atualização:", ocorrencia);
+
+        const result = await pool.query(
+            "UPDATE ocorrencias SET descricao = $1, bairro_id = $2 WHERE id = $3 RETURNING *",
+            [ocorrencia.descricao, ocorrencia.bairro_id, id]
+        );
+
+        if (result.rowCount === 0) {
+            console.log("Ocorrência não encontrada.");
+            return null;
+        }
+
+        console.log("Ocorrência atualizada com sucesso:", result.rows[0]);
+        return result.rows[0];
+    } catch (error) {
+        console.error("Erro ao atualizar a ocorrência no banco de dados:", error);
+        throw error;
+    }
 };
 
 module.exports = { getOcorrencias, getOcorrenciaById, createOcorrencia, deleteOcorrencia, updateOcorrencia };

@@ -44,13 +44,20 @@ const deleteOcorrencia = async (req, res) => {
 
 const updateOcorrencia = async (req, res) => {
     try {
-        const { bairro_id, descricao } = req.body;
-        const updatedOcorrencia = await ocorrenciaModel.updateOcorrencia(req.params.id, { bairro_id, descricao });
+        console.log("ID recebido para atualização:", req.params.id);
+        const { descricao, bairro_id } = req.body;
+
+        const updatedOcorrencia = await ocorrenciaModel.updateOcorrencia(req.params.id, { descricao, bairro_id });
+
         if (!updatedOcorrencia) {
+            console.log("Erro: Ocorrência não encontrada.");
             return res.status(404).json({ message: "Ocorrência não encontrada" });
         }
-        res.json(updatedOcorrencia);
+
+        console.log("Ocorrência atualizada com sucesso:", updatedOcorrencia);
+        res.status(200).json(updatedOcorrencia);
     } catch (error) {
+        console.error("Erro ao atualizar a ocorrência:", error);
         res.status(500).json({ message: "Erro ao atualizar a ocorrência" });
     }
 };

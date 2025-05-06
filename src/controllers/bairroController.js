@@ -2,22 +2,41 @@ const bairroModel = require("../models/bairroModel");
 
 const getAllBairros = async (req, res) => {
     try {
-        const bairros = await bairroModel.getBairros();
-        res.status(200).json(bairros); 
+        const { nome } = req.query;
+        let bairros;
+
+        if (nome) {
+            console.log(`Filtrando bairros pelo nome: ${nome}`);
+            bairros = await bairroModel.getBairrosByName(nome); 
+        } else {
+            console.log("Buscando todos os bairros...");
+            bairros = await bairroModel.getBairros(); 
+        }
+
+        res.status(200).json(bairros);
     } catch (error) {
+        console.error("Erro ao buscar os bairros:", error);
         res.status(500).json({ message: "Erro ao buscar os bairros" });
     }
 };
 
 const getBairros = async (req, res) => {
     try {
-        const bairro = await bairroModel.getBairroById(req.params.id); 
-        if (!bairro) {
-            return res.status(404).json({ message: "Bairro não encontrado" });
+        const { nome } = req.query;
+        let bairros;
+
+        if (nome) {
+            console.log(`Filtrando bairros pelo nome: ${nome}`);
+            bairros = await bairroModel.getBairrosByName(nome); 
+        } else {
+            console.log("Buscando todos os bairros...");
+            bairros = await bairroModel.getBairros(); 
         }
-        res.status(200).json(bairro);
+
+        res.status(200).json(bairros);
     } catch (error) {
-        res.status(500).json({ message: "Erro ao buscar o bairro" });
+        console.error("Erro ao buscar os bairros:", error);
+        res.status(500).json({ message: "Erro ao buscar os bairros" });
     }
 };
 
@@ -49,12 +68,20 @@ const deleteBairro = async (req, res) => {
 
 const updateBairro = async (req, res) => {
     try {
+        console.log("ID recebido para atualização:", req.params.id);
         const { nome, cidade, estado } = req.body;
+
         const updatedBairro = await bairroModel.updateBairro(req.params.id, { nome, cidade, estado });
+
         if (!updatedBairro) {
+            console.log("Erro: Bairro não encontrado.");
             return res.status(404).json({ message: "Bairro não encontrado" });
         }
+
+        console.log("Bairro atualizado com sucesso:", updatedBairro);
+        res.status(200).json(updatedBairro);
     } catch (error) {
+        console.error("Erro ao atualizar o bairro:", error);
         res.status(500).json({ message: "Erro ao atualizar o bairro" });
     }
 };
