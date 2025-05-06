@@ -5,6 +5,7 @@
         "ILIKE",
         "ocorrencia",
         "ocorrencias",
+        "originalname",
         "postgres"
     ]
 }
