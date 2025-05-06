@@ -42,10 +42,15 @@ const getBairros = async (req, res) => {
 
 const createBairro = async (req, res) => {
     try {
-        const { nome, cidade, estado } = req.body; 
-        const newBairro = await bairroModel.createBairro({ nome, cidade, estado });
+        const { nome, cidade, estado } = req.body;
+        const photo = req.file ? req.file.filename : null; 
+
+        console.log("Dados recebidos:", { nome, cidade, estado, photo });
+
+        const newBairro = await bairroModel.createBairro({ nome, cidade, estado, photo });
         res.status(201).json(newBairro);
     } catch (error) {
+        console.error("Erro ao criar o bairro:", error);
         res.status(500).json({ message: "Erro ao criar o bairro" });
     }
 };
