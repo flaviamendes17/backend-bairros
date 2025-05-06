@@ -19,12 +19,24 @@ const createBairro = async (bairro) => {
 };
 
 const deleteBairro = async (id) => {
-    const result = await pool.query("DELETE FROM bairros WHERE id = $1 RETURNING *", [id]);
-    if (result.rowCount === 0) {
-        return { error: "Bairro não encontrado" };
+    try {
+        console.log("Tentando deletar o bairro com ID:", id);
+
+        await pool.query("DELETE FROM ocorrencias WHERE bairro_id = $1", [id]);
+
+        // Excluir o bairro
+        const result = await pool.query("DELETE FROM bairros WHERE id = $1 RETURNING *", [id]);
+        if (result.rowCount === 0) {
+            console.log("Bairro não encontrado.");
+            return { error: "Bairro não encontrado" };
+        }
+        console.log("Bairro deletado com sucesso:", result.rows[0]);
+        return { message: "Bairro deletado com sucesso" };
+    } catch (error) {
+        console.error("Erro ao deletar o bairro no banco de dados:", error);
+        throw error;
     }
-    return { message: "Bairro deletado com sucesso" };
-}
+};
 
 const updateBairro = async (id, bairro) => {
     const result = await pool.query (

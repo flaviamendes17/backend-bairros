@@ -33,12 +33,19 @@ const createBairro = async (req, res) => {
 
 const deleteBairro = async (req, res) => {
     try {
-        const message = await bairroModel.deleteBairro(req.params.id);
-        res.json({ message });
+        console.log("ID recebido para exclusão:", req.params.id); 
+        const result = await bairroModel.deleteBairro(req.params.id);
+        if (result.error) {
+            console.log("Erro: Bairro não encontrado."); 
+            return res.status(404).json({ message: result.error });
+        }
+        console.log("Bairro deletado com sucesso:", result); 
+        res.json(result);
     } catch (error) {
+        console.error("Erro ao deletar o bairro:", error);
         res.status(500).json({ message: "Erro ao deletar o bairro" });
     }
-}
+};
 
 const updateBairro = async (req, res) => {
     try {
